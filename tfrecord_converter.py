@@ -59,3 +59,48 @@ def process_and_save_embeddings(input_path: str, output_file: str, embedding_sha
         for id_str, embedding in embeddings.items():
             example = serialize_embedding(id_str, embedding)
             writer.write(example)
+
+
+def serialize_index_pair(index_pair: tuple):
+    """
+    Serializes a pair of indices and a label into a TensorFlow `Example` for TFRecord storage.
+
+    Args:
+        index_pair (tuple): A tuple containing two string identifiers and an integer label, 
+                            in the format (index_1, index_2, label).
+
+    Returns:
+        bytes: A serialized `Example` protocol buffer containing the two indices and the label.
+
+    This function encodes two string identifiers (`index_1` and `index_2`) and an integer label 
+    into a TensorFlow `Example` suitable for storage in a TFRecord file.
+    """
+    feature = {
+        'index_1': tf.train.Feature(bytes_list=tf.train.BytesList(value=[index_pair[0].encode('utf-8')])),
+        'index_2': tf.train.Feature(bytes_list=tf.train.BytesList(value=[index_pair[1].encode('utf-8')])),
+        'label': tf.train.Feature(int64_list=tf.train.Int64List(value=[index_pair[2]]))
+    }
+    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
+    return example_proto.SerializeToString()
+
+def process_and_save_protein_pairs(input_file: str, output_file: str):
+    """
+    Reads protein pairs from a file, converts them to a specific format, and saves them in a TFRecord file.
+
+    Args:
+        input_file (str): Path to the input TSV file containing protein pairs and labels.
+        output_file (str): Filename for the output TFRecord file.
+    """
+    protpairs = []
+    
+    # Read pairs from the input file
+    with open(input_file, 'r') as pairsFile:
+        for line in pairsFile:
+            p1, p2, label = line.strip().split('\t')
+            protpairs.append((p1, p2, int(label)))
+
+    # Write pairs to TFRecord file
+    with tf.io.TFRecordWriter(output_file) as writer:
+        for index_pair in protpairs:
+            example = serialize_index_pair(index_pair)
+            writer.write(example)
