@@ -50,8 +50,8 @@ def process_and_save_embeddings(input_path: str, output_file: str, embedding_sha
             protId = address.split('/')[-1].split('.')[0]
             embeddings[protId] = embd_value
 
-            # Print progress every 100 embeddings
-            if len(embeddings) % 100 == 0:
+            # Print progress every 1000 embeddings
+            if len(embeddings) % 1000 == 0:
                 print(f"Processed {len(embeddings)} embeddings")
 
     # Save embeddings to TFRecord file
