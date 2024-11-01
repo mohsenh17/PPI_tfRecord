@@ -82,3 +82,21 @@ process_and_save_protein_pairs(
 This code reads embeddings and protein pairs from specified files and saves them in TFRecord format for seamless integration into TensorFlow workflows.
 
 
+___
+
+
+## Training with TFRecord Data
+
+The classifier model is trained using the TFRecord files generated in the data conversion step.
+
+### Model and Training Process
+- `PPI_Classifier.py` defines a neural network model with two inputs (one for each protein in a pair) and dense layers for feature extraction and binary classification.
+- **Dataset Loading and Parsing:** Parses the TFRecord files, maps embeddings to protein IDs, and prepares the data for training.
+- **Callbacks:** Early stopping and model checkpointing are used to optimize training.
+### Example Training Script
+Run the following command to start training with the saved TFRecords:
+
+```bash
+python PPI_Classifier.py
+```
+The model will automatically load data from Allembeddings.tfrecord and Allprotpairs.tfrecord, train the classifier, and save the best model weights to out.h5.
