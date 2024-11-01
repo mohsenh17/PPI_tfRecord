@@ -14,8 +14,8 @@ This repository provides tools to process protein embeddings and protein pairs, 
 To get started, clone the repository and install the necessary dependencies:
 
 ```bash
-git clone https://github.com/yourusername/Protein-Embedding-Processor.git
-cd Protein-Embedding-Processor
+git clone https://github.com/yourusername/PPI_tfRecord.git
+cd PPI_tfRecord
 pip install tensorflow numpy pandas
 ```
 
